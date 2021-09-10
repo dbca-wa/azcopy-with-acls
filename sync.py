@@ -15,6 +15,8 @@ if action == "backup":
     run(["azcopy", "sync", local, f"{remote}?{sas}", "--mirror-mode", "--recursive", "--delete-destination", "true", "--put-md5"])
     run(["azcopy", "copy", f"{local}.acls", f"{remote}.acls?{sas}", "--overwrite", "true"])
 elif action == "restore":
+    if os.path.exists("lost+found"): # handle new filesystems
+        os.rmdir("lost+found")
     if any(os.scandir(local)):
         run(["ls", "-lah"])
         exit(f"Files in local path {local}, refusing to restore")

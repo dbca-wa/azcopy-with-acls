@@ -18,6 +18,7 @@ spec:
   template:
     backoffLimit: 1
     spec:
+      restartPolicy: Never
       containers:
         - name: backup-myvol1
           image: 'ghcr.io/dbca-wa/azcopy-with-acls:main'
@@ -52,7 +53,9 @@ metadata:
   name: restore-myvol1
 spec:
   template:
+    backoffLimit: 1
     spec:
+      restartPolicy: Never
       containers:
         - name: restore-myvol1
           image: 'ghcr.io/dbca-wa/azcopy-with-acls:main'
