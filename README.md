@@ -28,13 +28,13 @@ spec:
               value: 'https://<account>.blob.core.windows.net/<container>/2021-backups/myvol1'
             - name: SAS_TOKEN
               value: 'sp=racwdl&st=2021-09-10T06:28:07Z&se=2021-09-11T14:28:07Z&spr=https&sv=2020-08-04&sr=c&sig=<secretsig>'
-      volumeMounts:
-        - name: myvol1
-          mountPath: /mnt/local
+          volumeMounts:
+            - name: myvol1
+              mountPath: /mnt/local
       volumes:
         - name: myvol1
           persistentVolumeClaim:
-            claimName: pvc-azuredisk-myvol1
+            claimName: pvc-myvol1
 ```
 
 ## Restoring a volume
@@ -66,13 +66,19 @@ spec:
           volumeMounts:
             - name: myvol1
               mountPath: /mnt/local
-  volumeClaimTemplates:
-    - metadata:
-        name: myvol1
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 300Gi
+      volumes:
+      - name: myvol1
+        persistentVolumeClaim:
+          claimName: pvc-myvol1
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-myvol1
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 300Gi
 ```
