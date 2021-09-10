@@ -1,8 +1,9 @@
 FROM alpine
 LABEL org.opencontainers.image.source https://github.dev/dbca-wa/azcopy-with-acls
 
+WORKDIR /usr/local/bin
 RUN apk --no-cache add curl acl 
-RUN curl -JLO https://aka.ms/downloadazcopy-v10-linux && ls -lh && tar xvzf azcopy*.tar.gz --strip-components=1 && mv azcopy /usr/local/bin
+RUN curl -L https://aka.ms/downloadazcopy-v10-linux -o azcopy.tar.gz && tar xvzf azcopy.tar.gz --strip-components=1 && rm azcopy.tar.gz
 
 COPY sync.sh /usr/local/bin/sync.sh
 CMD ["/usr/local/bin/sync.sh"]
