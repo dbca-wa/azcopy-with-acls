@@ -16,6 +16,7 @@ if action == "backup":
     run(["azcopy", "copy", f"{local}.acls", f"{remote}.acls?{sas}", "--overwrite", "true"])
 elif action == "restore":
     if any(os.scandir(local)):
+        run(["ls", "-lah"])
         exit(f"Files in local path {local}, refusing to restore")
     run(["azcopy", "copy", f"{remote}.acls?{sas}", f"{local}.acls", "--overwrite", "true"])
     run(["azcopy", "sync", f"{remote}?{sas}", local])
