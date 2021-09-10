@@ -14,14 +14,14 @@ if action == "backup":
     run(f"getfacl -R . > {local}.acls", shell=True)
     run(["azcopy", "sync", local, f"{remote}?{sas}", "--mirror-mode", "--recursive", "--delete-destination", "true", "--put-md5"])
     run(["azcopy", "copy", f"{local}.acls", f"{remote}.acls?{sas}", "--overwrite", "true"])
-elif action == "restore":
+elif action.startswith("restore"):
     if os.path.exists("lost+found"): # handle new filesystems
         os.rmdir("lost+found")
-    if any(os.scandir(local)):
+    if any(os.scandir(local)) and action != "restore_clobber":
         run(["ls", "-lah"])
         exit(f"Files in local path {local}, refusing to restore")
     run(["azcopy", "copy", f"{remote}.acls?{sas}", f"{local}.acls", "--overwrite", "true"])
-    run(["azcopy", "sync", f"{remote}?{sas}", local])
+    run(["azcopy", "sync", f"{remote}?{sas}", local, "--mirror-mode", "--recursive", "--delete-destination", "true"])
     run(["setfacl", f"--restore={local}.acls"])
 else:
     exit("Please set ACTION (backup or restore), REMOTE_PATH (blob container url) and SAS_TOKEN to sync a volume.")

@@ -39,7 +39,7 @@ spec:
 ```
 
 ## Restoring a volume
-Note this utility will only restore to empty volumes.
+Note by default will only restore to empty volumes. To force clobbering existing data set the action to `restore_clobber`.
 
 Using docker
 ```bash
