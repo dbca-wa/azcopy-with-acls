@@ -1,3 +1,4 @@
+#!/bin/bash
 if [[ -z "${BACKUP_SASURL}" ]]; then
     getfacl -R /mnt/backup /mnt/backup.acls
     azcopy sync /mnt/backup "${BACKUP_SASURL}" --mirror-mode --recursive --delete-destination --put-md5
