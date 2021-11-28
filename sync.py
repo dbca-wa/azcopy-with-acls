@@ -22,7 +22,7 @@ os.chdir(local)
 if action == "backup":
     size = check_output("du -sh | awk '{print $1}'", shell=True).decode("utf8").strip()
     print(f"Backing up '{local}' ({size}) to '{remote}'")
-    run(f"tar -cf - . | pv -fs {size} | lz4 | azcopy cp {remoteurl} --from-to=PipeBlob", shell=True)
+    run(f"tar -cf - . | pv -s {size} | lz4 | azcopy cp {remoteurl} --from-to=PipeBlob", shell=True)
 elif action.startswith("restore"):
     # head request to a blob URL returns its size
     size = check_output(f"curl -s --head {remoteurl}" + " | awk '$1 == \"Content-Length:\" {print $2}' | tr -d '\r' | numfmt --to=iec", shell=True).decode("utf8").strip()
@@ -34,6 +34,6 @@ elif action.startswith("restore"):
     if any(os.scandir(local)) and action != "restore_clobber":
         run(["ls", "-lah"])
         exit(f"Files in local path {local}, refusing to restore")
-    run(f"azcopy cp {remoteurl} --from-to=BlobPipe | pv -fs {size} | tar -I lz4 -xf -", shell=True)
+    run(f"azcopy cp {remoteurl} --from-to=BlobPipe | pv -s {size} | tar -I lz4 -xf -", shell=True)
 else:
     exit("Please set ACTION (backup or restore), REMOTE_PATH (blob container url) and SAS_TOKEN to sync a volume.")
