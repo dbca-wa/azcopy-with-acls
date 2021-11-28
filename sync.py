@@ -8,8 +8,9 @@ local = os.path.abspath(os.environ.get("LOCAL_PATH", "/mnt/local"))
 print(f"Local dir: {local}")
 sas = os.environ.get("SAS_TOKEN", False)
 remote = os.environ["REMOTE_PATH"]
-if not remote.endswith(".tar.lz4"):
-    remote += ".tar.lz4"
+if remote.find(".tar.lz4") < 0:
+    if not remote.find("?"): # only autoadd suffix if not a full url
+        remote += ".tar.lz4"
 if sas:
     remoteurl = f'"{remote}?{sas}"'
 else:
