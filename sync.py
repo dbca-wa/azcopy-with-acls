@@ -13,7 +13,7 @@ if not remote.endswith(".tar.lz4"):
 if sas:
     remoteurl = f'"{remote}?{sas}"'
 else:
-    remoteurl = remote
+    remoteurl = f'"{remote}"'
 print(f"Remote blob URL: {remoteurl}")
 
 os.chdir(local)
