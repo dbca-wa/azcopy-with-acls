@@ -5,6 +5,7 @@ from sys import exit
 
 action = os.environ["ACTION"]
 local = os.path.abspath(os.environ.get("LOCAL_PATH", "/mnt/local"))
+print(f"Local dir: {local}")
 sas = os.environ.get("SAS_TOKEN", False)
 remote = os.environ["REMOTE_PATH"]
 if not remote.endswith(".tar.lz4"):
@@ -13,6 +14,7 @@ if sas:
     remoteurl = f'"{remote}?{sas}"'
 else:
     remoteurl = remote
+print(f"Remote blob URL: {remoteurl}")
 
 os.chdir(local)
 
@@ -31,6 +33,6 @@ elif action.startswith("restore"):
     if any(os.scandir(local)) and action != "restore_clobber":
         run(["ls", "-lah"])
         exit(f"Files in local path {local}, refusing to restore")
-    run(f"azcopy cp {remoteurl} --from-to=BlobPipe | pv -fs {size} | tar -I lz4 -xf -", shell=True)
+    run(f"curl {remoteurl} | lz4 | tar -xf -", shell=True)
 else:
     exit("Please set ACTION (backup or restore), REMOTE_PATH (blob container url) and SAS_TOKEN to sync a volume.")

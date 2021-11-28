@@ -3,6 +3,8 @@ Container/Docker build of a utility to use azcopy to backup or restore a volume 
 
 As the container is just a docker image, it can backup/restore any posix volume available to docker, to/from blob storage. This means you can e.g. backup a volume accessible to a local developer, and restore it to a managed kubernetes environment, or backup a production database in kubernetes and restore it locally using docker or similar for development.
 
+Note that `SAS_TOKEN` is not required if `REMOTE_PATH` includes the sas token (i.e. is a full sas url).
+
 ## Backing up a volume
 Using docker:
 ```bash
