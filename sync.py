@@ -20,8 +20,8 @@ print(f"Remote blob URL: {remoteurl}")
 os.chdir(local)
 
 if action == "backup":
+    size = check_output("du -sh | awk '{print $1}'", shell=True).decode("utf8").strip()
     print(f"Backing up '{local}' ({size}) to '{remote}'")
-    size = check_output(["du", "-sh"]).split(" ")[0]
     run(f"tar -cf - . | pv -fs {size} | lz4 | azcopy cp {remoteurl} --from-to=PipeBlob", shell=True)
 elif action.startswith("restore"):
     # head request to a blob URL returns its size
