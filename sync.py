@@ -3,13 +3,16 @@ import os
 from subprocess import run, check_output
 from sys import exit
 
+action = os.environ["ACTION"]
 local = os.path.abspath(os.environ.get("LOCAL_PATH", "/mnt/local"))
-sas = os.environ["SAS_TOKEN"]
+sas = os.environ.get("SAS_TOKEN", False)
 remote = os.environ["REMOTE_PATH"]
 if not remote.endswith(".tar.lz4"):
     remote += ".tar.lz4"
-action = os.environ["ACTION"]
-remoteurl = f'"{remote}?{sas}"'
+if sas:
+    remoteurl = f'"{remote}?{sas}"'
+else:
+    remoteurl = remote
 
 os.chdir(local)
 
