@@ -34,6 +34,6 @@ elif action.startswith("restore"):
     if any(os.scandir(local)) and action != "restore_clobber":
         run(["ls", "-lah"])
         exit(f"Files in local path {local}, refusing to restore")
-    run(f"curl {remoteurl} | lz4 | tar -xf -", shell=True)
+    run(f"azcopy cp {remoteurl} --from-to=BlobPipe | pv -fs {size} | lz4 | tar -xf -", shell=True)
 else:
     exit("Please set ACTION (backup or restore), REMOTE_PATH (blob container url) and SAS_TOKEN to sync a volume.")
