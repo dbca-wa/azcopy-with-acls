@@ -21,9 +21,9 @@ spec:
     backoffLimit: 1
     spec:
       restartPolicy: Never
-      imagePullPolicy: Always
       containers:
         - name: backup-myvol1
+          imagePullPolicy: Always
           image: 'ghcr.io/dbca-wa/azcopy-with-acls:main'
           env:
             - name: ACTION
@@ -69,9 +69,9 @@ spec:
     backoffLimit: 1
     spec:
       restartPolicy: Never
-      imagePullPolicy: Always
       containers:
         - name: restore-myvol1
+          imagePullPolicy: Always
           image: 'ghcr.io/dbca-wa/azcopy-with-acls:main'
           env:
             - name: ACTION
