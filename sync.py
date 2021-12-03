@@ -27,9 +27,9 @@ if action == "backup":
 elif action.startswith("restore"):
     # head request to a blob URL returns its size
     sbytes = check_output(f"curl -s --head {remoteurl}" + " | awk '$1 == \"Content-Length:\" {print $2}' | tr -d '\r'", shell=True).decode("utf8").strip()
-    size = check_output(f"echo {sbytes} | numfmt --to=iec", shell=True).decode("utf8").strip()
-    if not size:
+    if not sbytes:
         exit(f"Remote blob '{remote}' does not exist...")
+    size = check_output(f"echo {sbytes} | numfmt --to=iec", shell=True).decode("utf8").strip()
     print(f"Restoring '{remote}' ({size} tar.lz4) to '{local}'")
     if os.path.exists("lost+found"): # handle new filesystems
         os.rmdir("lost+found")
