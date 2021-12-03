@@ -20,7 +20,7 @@ print(f"Remote blob URL: {remoteurl}")
 os.chdir(local)
 
 if action == "backup":
-    sbytes = check_output("du -s | awk '{print $1}'", shell=True).decode("utf8").strip()
+    sbytes = check_output("du -sb | awk '{print $1}'", shell=True).decode("utf8").strip()
     size = check_output(f"echo {sbytes} | numfmt --to=iec", shell=True).decode("utf8").strip()
     print(f"Backing up '{local}' ({size}) to '{remote}'")
     run(f"tar -cf - . | pv -s {sbytes} | lz4 | azcopy cp {remoteurl} --from-to=PipeBlob", shell=True)
